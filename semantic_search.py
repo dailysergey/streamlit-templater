@@ -21,6 +21,12 @@ import urllib
 # download with progress bar
 mybar = None
 main_dir = "https://github.com/dailysergey/streamlit-templater/releases/download/files"
+# Page layout
+# Page expands to full width
+st.set_page_config(page_title="ГИСП подбор шаблонов", page_icon="🗂", layout="wide")
+st.markdown('<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">', unsafe_allow_html=True)
+
+
 
 def show_progress(block_num, block_size, total_size):
     global mybar
@@ -63,10 +69,6 @@ def timeit(func):
     return timeit_wrapper
 
 
-# Page layout
-# Page expands to full width
-st.set_page_config(page_title="ГИСП подбор шаблонов", page_icon="🗂", layout="wide")
-st.markdown('<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">', unsafe_allow_html=True)
 
 
 @st.experimental_singleton
