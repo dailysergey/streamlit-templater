@@ -15,7 +15,8 @@ import time
 from ast import literal_eval
 from collections import Counter
 from operator import itemgetter
-
+import os
+import urllib
 
 # download with progress bar
 mybar = None
