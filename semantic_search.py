@@ -19,7 +19,7 @@ from operator import itemgetter
 
 # download with progress bar
 mybar = None
-main_dir = "https://github.com/dailysergey/stream-gisp-cluster/releases/download/streamlit-csv"
+main_dir = "https://github.com/dailysergey/streamlit-templater/releases/download/files"
 
 def show_progress(block_num, block_size, total_size):
     global mybar
