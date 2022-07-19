@@ -56,20 +56,6 @@ for file_name in necessary_files:
                 #st.error(f'{file_name} не скачался. Ошибка: {e}')
                 print(f'{file_name} не скачался. Ошибка: {e}')
 
-def timeit(func):
-    @wraps(func)
-    def timeit_wrapper(*args, **kwargs):
-        start_time = time.perf_counter()
-        result = func(*args, **kwargs)
-        end_time = time.perf_counter()
-        total_time = end_time - start_time
-        print(
-            f'Function {func.__name__}{args} {kwargs} Took {total_time:.4f} seconds')
-        return result
-    return timeit_wrapper
-
-
-
 
 @st.experimental_singleton
 def initialize():
@@ -120,7 +106,6 @@ def get_group_and_cluster_number(query: str):
     return group_numbers
 
 
-@timeit
 def make_template(df: pd.DataFrame, group_number: int, cluster_num: int):
 
     group = df[df.group_number == group_number]
@@ -195,7 +180,6 @@ def vote_for_okpd(ids: List[str]):
         return -1
 
 
-@timeit
 def embed_bert_cls(text):
     model.to(device)
     # use padding, truncation of long sequences and return pytorch tensors
@@ -314,18 +298,3 @@ if len(character) != 0:
     else:
         st.dataframe(character[character['Частота встречаемости, %'] >= min_val][[
                      'Тип характеристики', 'Возможные значения', 'Частота встречаемости, %']])
-
-
-# '''if group_number == -1 and cluster_number == -1:
-#        st.write('Запутался, не просите повторить...')
-#        query = ''
-#    else:
-#       template_result, values, group_size = make_template(
-#            df, group_number, cluster_number)
-#
-#
-#        okpd2_id = df[(df.group_number == group_number) & (
-#            df.cluster_number == cluster_number)].okpd2.values[0]
-#        ktru_id = df[(df.group_number == group_number) & (
-#            df.cluster_number == cluster_number)].ktru.values[0]
-#       '''
