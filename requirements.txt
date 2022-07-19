@@ -5,3 +5,4 @@ streamlit
 requests==2.25.1
 datasets
 faiss-cpu
+torch
