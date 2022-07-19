@@ -17,6 +17,38 @@ from collections import Counter
 from operator import itemgetter
 
 
+# download with progress bar
+mybar = None
+main_dir = "https://github.com/dailysergey/stream-gisp-cluster/releases/download/streamlit-csv"
+
+def show_progress(block_num, block_size, total_size):
+    global mybar
+    if mybar is None:
+        mybar = st.progress(0.0)
+    downloaded = block_num * block_size / total_size
+    if downloaded <= 1.0:
+        mybar.progress(downloaded)
+    else:
+        mybar.progress(1.0)
+
+
+necessary_files = ['products_name.csv',
+                   'okpd2.csv', 'ktru.csv']
+for file_name in necessary_files:
+
+    # download files locally
+    if not os.path.isfile(file_name):
+        with st.spinner('Скачиваем файлы. Это делается один раз и занимает минуту...'):
+            try:
+                #st.info(f'{file_name} скачивается')
+                print(f'{file_name} скачивается')
+                urllib.request.urlretrieve(main_dir, file_name, show_progress)
+                #st.success(f'{file_name} скачался')
+                print((f'{file_name} скачался'))
+            except Exception as e:
+                #st.error(f'{file_name} не скачался. Ошибка: {e}')
+                print(f'{file_name} не скачался. Ошибка: {e}')
+
 def timeit(func):
     @wraps(func)
     def timeit_wrapper(*args, **kwargs):
@@ -39,12 +71,13 @@ st.markdown('<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/b
 
 @st.experimental_singleton
 def initialize():
-    device = torch.device('cuda:0')
+    device = torch.device('cpu')
     print('Device:', device)
 
-    products = pd.read_csv('../streamlit_data/prod_only_names.csv')
+    products = pd.read_csv(f'{main_dir}/prod_only_names.csv')
     # prod_hf_ds = load_from_disk('products_embeddings.hf')
-    prod_hf_ds = load_from_disk('products_name_embeddings.hf')
+    #prod_hf_ds = load_from_disk('products_name_embeddings.hf')
+    prod_hf_ds = load_dataset('gusevski/products_embeddings')
     prod_hf_ds.add_faiss_index(column="embedding")
 
     model_ckpt = "cointegrated/rubert-tiny2"
@@ -64,9 +97,9 @@ def get_products_df(path):
 
 @st.cache(allow_output_mutation=True)
 def get_okpd2_ktru():
-    okpd2_df = pd.read_csv("okpd2.csv", index_col="id")
+    okpd2_df = pd.read_csv(f"{main_dir}/okpd2.csv", index_col="id")
     okpd2_df.loc[0] = {'name': "Не определено"}
-    ktru_df = pd.read_csv("ktru.csv", index_col="id")
+    ktru_df = pd.read_csv(f"{main_dir}/ktru.csv", index_col="id")
     ktru_df.loc[0] = {'name': "Не определено"}
     return okpd2_df, ktru_df
 
